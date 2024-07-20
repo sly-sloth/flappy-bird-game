@@ -200,7 +200,7 @@ def draw_window(win, birds, pipes, base, score, len_birds):
     text = STAT_FONT.render(f"Score: {score}", 1, (255, 255, 255))
     text_birds = STAT_FONT.render(f"Birds: {len_birds}", 1, (255, 255, 255))
     win.blit(text, (WIN_WIDTH - 10 - text.get_width(), 10))
-    win.blit(text_birds, (0, 10))
+    win.blit(text_birds, (10, 10))
 
     base.draw(win)
 
@@ -231,6 +231,9 @@ def main(genomes, config):
     # pygame.init()
     # rerun = True
     # while rerun:
+
+    with open("game/hs.txt", "r") as file:
+        high_score = int(file.read())
 
     nets = []
     ge = []
@@ -319,6 +322,11 @@ def main(genomes, config):
                 for bird in birds:
                     bird.IMGS = BLUE_BIRD_IMGS
 
+            if score > high_score:
+                high_score = score
+                with open("game/hs.txt", "w") as f:
+                    f.write(f"{high_score}")
+
             for g in ge:
                 g.fitness += 5 
             pipes.append(Pipe(600))
@@ -335,7 +343,7 @@ def main(genomes, config):
 
         
         base.move()
-        draw_window(win, birds, pipes, base, score, len_birds)
+        draw_window(win, birds, pipes, base, score, len(birds))
 
         # while runF:
         #     draw_window_static(win, bird, pipes, base, score)
